@@ -7,6 +7,12 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs12.x
+      Environment:
+        Variables:
+          NOTIFY_SNS: !Ref Ec2NotificationTopic
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt Ec2NotificationTopic.TopicName
   LogRouterCloudWatchPermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -22,3 +28,7 @@ Resources:
         "Fn::GetAtt": [LogRouter, Arn]
       FilterPattern: "{ $.eventName = \"RunInstances\" }"
       LogGroupName: CloudTrail/DefaultLogGroup
+  Ec2NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: sam-cloudtrail-ec2-notification
