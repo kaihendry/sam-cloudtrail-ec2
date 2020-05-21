@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Routes ec2 events from Cloudtrail logs groups to a lambda functions
+Resources:
+  LogRouter:
+    Type: AWS::Serverless::Function
+    Properties:
+      InlineCode: |
+        exports.handler = function(event) {
+          console.log(event);
+        }
+      Handler: index.handler
+      Runtime: nodejs12.x
+  LogRouterCloudWatchPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:*"
+      FunctionName:
+        Ref: LogRouter
+      Principal: logs.ap-southeast-1.amazonaws.com
+  CloudtrailSubscription:
+    Type: AWS::Logs::SubscriptionFilter
+    DependsOn: LogRouterCloudWatchPermission
+    Properties:
+      DestinationArn:
+        "Fn::GetAtt": [LogRouter, Arn]
+      FilterPattern: "{ $.eventName = \"RunInstances\" }"
+      LogGroupName: CloudTrail/DefaultLogGroup
