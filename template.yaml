@@ -7,15 +7,12 @@ Resources:
     Properties:
       InlineCode: |
         var zlib = require('zlib')
-        exports.handler = function(event, context) {
-        var payload = new Buffer(event.awslogs.data, 'base64')
-        zlib.gunzip(payload, function(e, decodedEvent) {
-            if (e) {
-                context.fail(e)
-            } else {
-                console.log(decodedEvent)
-            }
-          })
+        exports.handler = function(event) {
+        if (event.awslogs && event.awslogs.data) {
+        const payload = Buffer.from(event.awslogs.data, 'base64');
+        const logevents = JSON.parse(zlib.unzipSync(payload).toString());
+        console.log(logevents);
+        }
         }
       Handler: index.handler
       Runtime: nodejs12.x
