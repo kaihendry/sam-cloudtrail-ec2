@@ -24,3 +24,7 @@ Cloudtrail bucket isn't used, so think about putting expiration on the objects.
 
 Similarly **CloudTrail/DefaultLogGroup** can get large, put a retention policy
 on.
+
+# TODO
+
+Maybe implement the other events: <https://aws.amazon.com/premiumsupport/knowledge-center/cloudtrail-search-api-calls/>

@@ -1,6 +1,9 @@
-AWS_PROFILE = mine
-STACK_NAME = sam-cloudtrail-ec2
 BUCKET = webc-cloudtrail
+AWS_PROFILE = mine
+
+# Tweak the above for your AWS account
+
+STACK_NAME = sam-cloudtrail-ec2
 
 SAM = AWS_PROFILE=$(AWS_PROFILE) sam
 
