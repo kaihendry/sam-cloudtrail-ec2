@@ -5,19 +5,6 @@ Resources:
   LogRouter:
     Type: AWS::Serverless::Function
     Properties:
-      InlineCode: |
-        var zlib = require('zlib')
-        exports.handler = function(event) {
-        console.log(event)
-        if (event.awslogs && event.awslogs.data) {
-        const payload = Buffer.from(event.awslogs.data, 'base64')
-        const logevents = JSON.parse(zlib.unzipSync(payload).toString()).logEvents
-        for (const logevent of logevents) {
-          const log = JSON.parse(logevent.message)
-          console.log(JSON.stringify(log, null, 2))
-          }
-        }
-        }
       Handler: index.handler
       Runtime: nodejs12.x
   LogRouterCloudWatchPermission:
