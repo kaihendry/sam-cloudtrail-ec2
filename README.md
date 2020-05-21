@@ -15,3 +15,10 @@ There should be a subscription active upon **CloudTrail/DefaultLogGroup**.
 <https://aws.amazon.com/premiumsupport/knowledge-center/ec2-email-instance-state-change/>
 is a good tip, but what they don't tell you, is that would need to deploy it
 EVERY REGION for it to work.
+
+# Maintenance consideration
+
+Cloudtrail bucket isn't used, so think about putting expiration on the objects.
+
+Similarly **CloudTrail/DefaultLogGroup** can get large, put a retention policy
+on.

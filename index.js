@@ -1,5 +1,6 @@
 var AWS = require('aws-sdk')
 var zlib = require('zlib')
+// https://github.com/kaihendry/sam-cloudtrail-ec2
 exports.handler = function (event) {
   console.log(event)
   if (event.awslogs && event.awslogs.data) {
