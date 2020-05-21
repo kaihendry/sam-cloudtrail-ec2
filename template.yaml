@@ -6,8 +6,16 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       InlineCode: |
-        exports.handler = function(event) {
-          console.log(event);
+        var zlib = require('zlib')
+        exports.handler = function(event, context) {
+        var payload = new Buffer(event.awslogs.data, 'base64')
+        zlib.gunzip(payload, function(e, decodedEvent) {
+            if (e) {
+                context.fail(e)
+            } else {
+                console.log(decodedEvent)
+            }
+          })
         }
       Handler: index.handler
       Runtime: nodejs12.x
