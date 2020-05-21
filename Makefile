@@ -20,3 +20,6 @@ clean:
 
 destroy:
 	AWS_PROFILE=$(AWS_PROFILE) aws cloudformation delete-stack --stack-name $(STACK_NAME)
+
+test: env.json event.json
+	sam local invoke -e event.json --env-vars env.json
