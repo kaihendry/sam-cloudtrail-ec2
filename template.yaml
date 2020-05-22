@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Routes ec2 events from Cloudtrail logs groups to a lambda functions
+
+Parameters:
+    NotificationEmail:
+        Type: String
+        Description: Email address to subscribe to SNS topic
+
 Resources:
   LogRouter:
     Type: AWS::Serverless::Function
@@ -26,9 +32,19 @@ Resources:
     Properties:
       DestinationArn:
         "Fn::GetAtt": [LogRouter, Arn]
-      FilterPattern: "{ $.eventName = \"RunInstances\" }"
+      FilterPattern: "{ ($.eventName = RunInstances) || ($.eventName = TerminateInstances) }"
       LogGroupName: CloudTrail/DefaultLogGroup
   Ec2NotificationTopic:
     Type: AWS::SNS::Topic
+    DeletionPolicy: Retain
     Properties:
-      TopicName: sam-cloudtrail-ec2-notification
+        TopicName: sam-cloudtrail-ec2-notification
+        DisplayName: EC2 event across all regions via cloudtrail
+        Subscription:
+          - Endpoint: !Ref NotificationEmail
+            Protocol: email
+
+Outputs:
+    SNSTopic:
+        Description: SNS Topic for cross-region EC2 updates from CloudTrail/DefaultLogGroup
+        Value: !Ref Ec2NotificationTopic
