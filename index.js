@@ -1,10 +1,10 @@
 var AWS = require('aws-sdk')
 var zlib = require('zlib')
 // https://github.com/kaihendry/sam-cloudtrail-ec2
-exports.handler = async function (event, context) {
+exports.handler = async function (event) {
   console.log(JSON.stringify(event, null, 2))
   if (!event.awslogs || !event.awslogs.data) {
-    context.fail(new Error('invalid Cloudwatch logs event'))
+    console.error('invalid Cloudwatch logs event')
     return
   }
 
@@ -21,15 +21,16 @@ exports.handler = async function (event, context) {
       var message = ''
       for (const machine of log.responseElements.instancesSet.items) {
         console.log('machine', machine)
-        message += `At ${log.eventTime}, event "${log.eventName}" on your EC2 instance ${machine.instanceId} on account ${log.recipientAccountId} in the Region ${log.awsRegion} with ${machine.tagSet && machine.tagSet.items && JSON.stringify(machine.tagSet.items)} tags.
-https://${log.awsRegion}.console.aws.amazon.com/ec2/v2/home?region=${log.awsRegion}#Instances:search=${machine.instanceId}`
+        message += `At ${log.eventTime}, event "${log.eventName}" on your EC2 instance ${machine.instanceId} on account ${log.recipientAccountId} in the Region ${log.awsRegion}.\n`
+        if (machine.tagSet && machine.tagSet.items) { message += `Tags: ${JSON.stringify(machine.tagSet.items)}\n` }
+        message += `https://${log.awsRegion}.console.aws.amazon.com/ec2/v2/home?region=${log.awsRegion}#Instances:search=${machine.instanceId}\n`
       }
       const params = { Message: message, TopicArn: process.env.TOPICARN }
       console.log('Notifying', params)
-      await new AWS.SNS().publish(params).promise()
-      context.succeed()
+      var publishResponse = await new AWS.SNS().publish(params).promise()
+      console.log(publishResponse)
     }
   } catch (e) {
-    context.fail(e)
+    console.error(e)
   }
 }
