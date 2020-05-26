@@ -1,4 +1,4 @@
-var SNS = require('aws-sdk/clients/sns')
+var AWS = require('aws-sdk')
 var zlib = require('zlib')
 // https://github.com/kaihendry/sam-cloudtrail-ec2
 exports.handler = async function (event, context) {
@@ -7,6 +7,10 @@ exports.handler = async function (event, context) {
     context.fail(new Error('invalid Cloudwatch logs event'))
     return
   }
+
+  const { Arn } = await new AWS.STS().getCallerIdentity().promise()
+  console.log('Permissions context', Arn)
+
   const payload = Buffer.from(event.awslogs.data, 'base64')
   const logevents = JSON.parse(zlib.unzipSync(payload).toString()).logEvents
   try {
@@ -22,7 +26,7 @@ https://${log.awsRegion}.console.aws.amazon.com/ec2/v2/home?region=${log.awsRegi
       }
       const params = { Message: message, TopicArn: process.env.NOTIFY_SNS }
       console.log('Notifying', params)
-      await new SNS().publish(params).promise()
+      await new AWS.SNS().publish(params).promise()
       context.succeed()
     }
   } catch (e) {

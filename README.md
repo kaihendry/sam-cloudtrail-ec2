@@ -4,6 +4,9 @@ Setup Cloudtrail to log to **CloudTrail/DefaultLogGroup**.
 
 <img src="https://s.natalian.org/2020-05-21/cloudtrail-cw-logs.png">
 
+Setup an SNS Topic with subscribers who would like to be informed when an EC2
+is launched in any AWS region.
+
 # How do I know if I have deployed this?
 
 <img src="https://s.natalian.org/2020-05-21/cloudtrail-subscription.png" alt="Cloudwatch subscription">

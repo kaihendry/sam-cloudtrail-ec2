@@ -1,6 +1,6 @@
 BUCKET = webc-cloudtrail
 AWS_PROFILE = mine
-NOTIFICATIONEMAIL = hendry@iki.fi
+TOPIC = arn:aws:sns:ap-southeast-1:407461997746:sam-cloudtrail-ec2-notification
 
 # Tweak the above for your AWS account
 
@@ -10,7 +10,7 @@ SAM = AWS_PROFILE=$(AWS_PROFILE) sam
 
 deploy: packaged.yaml
 	$(SAM) deploy --template-file packaged.yaml --stack-name $(STACK_NAME) --capabilities CAPABILITY_IAM \
-		--parameter-overrides NotificationEmail=$(NOTIFICATIONEMAIL) \
+		--parameter-overrides Topic=$(TOPIC) \
 		--no-fail-on-empty-changeset
 
 packaged.yaml: template.yaml index.js
@@ -25,3 +25,6 @@ destroy:
 
 test: env.json event.json
 	AWS_PROFILE=$(AWS_PROFILE) sam local invoke -e event.json --env-vars env.json
+
+list-topics:
+	aws --profile $(AWS_PROFILE) sns list-topics | grep TopicArn | grep ec2
