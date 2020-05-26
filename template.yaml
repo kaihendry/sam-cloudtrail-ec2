@@ -8,29 +8,28 @@ Parameters:
         Description: Topic to publish cross region EC2 events to
 
 Resources:
-  LogRouter:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: index.handler
-      Runtime: nodejs12.x
-      Environment:
-        Variables:
-          NOTIFY_SNS: !Ref Topic
-      Policies:
-        - SNSPublishMessagePolicy:
-            TopicName: !Ref Topic
-  LogRouterCloudWatchPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: "lambda:*"
-      FunctionName:
-        Ref: LogRouter
-      Principal: logs.ap-southeast-1.amazonaws.com
-  CloudtrailSubscription:
-    Type: AWS::Logs::SubscriptionFilter
-    DependsOn: LogRouterCloudWatchPermission
-    Properties:
-      DestinationArn:
-        "Fn::GetAtt": [LogRouter, Arn]
-      FilterPattern: "{ ($.eventName = RunInstances) || ($.eventName = TerminateInstances) }"
-      LogGroupName: CloudTrail/DefaultLogGroup
+    LogRouter:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: index.handler
+            Runtime: nodejs12.x
+            Environment:
+                Variables:
+                    NOTIFY_SNS: !Ref Topic
+            Policies:
+                - AmazonSNSFullAccess
+    LogRouterCloudWatchPermission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: "lambda:*"
+            FunctionName:
+                Ref: LogRouter
+            Principal: logs.ap-southeast-1.amazonaws.com
+    CloudtrailSubscription:
+        Type: AWS::Logs::SubscriptionFilter
+        DependsOn: LogRouterCloudWatchPermission
+        Properties:
+            DestinationArn:
+                "Fn::GetAtt": [LogRouter, Arn]
+            FilterPattern: "{ ($.eventName = RunInstances) || ($.eventName = TerminateInstances) }"
+            LogGroupName: CloudTrail/DefaultLogGroup
