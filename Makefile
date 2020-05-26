@@ -2,7 +2,7 @@ BUCKET = webc-cloudtrail
 AWS_PROFILE = mine
 TOPICARN = arn:aws:sns:ap-southeast-1:407461997746:sam-cloudtrail-ec2-notification
 
-# Tweak the above for your AWS account
+# Tweak the above for your AWS account or use `sam deploy -g`
 
 STACK_NAME = sam-cloudtrail-ec2
 

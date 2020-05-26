@@ -7,6 +7,8 @@ Setup Cloudtrail to log to **CloudTrail/DefaultLogGroup**.
 Setup an SNS Topic with subscribers who would like to be informed when an EC2
 is launched in any AWS region.
 
+[SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) and `sam deploy -g`.
+
 # How do I know if I have deployed this?
 
 <img src="https://s.natalian.org/2020-05-21/cloudtrail-subscription.png" alt="Cloudwatch subscription">
@@ -23,11 +25,8 @@ EVERY REGION for it to work.
 
 # Maintenance consideration
 
-Cloudtrail bucket isn't used, so think about putting expiration on the objects.
+Cloudtrail bucket isn't used by this function, so consider putting an
+expiration on the objects.
 
 Similarly **CloudTrail/DefaultLogGroup** can get large, put a retention policy
-on.
-
-# TODO
-
-Maybe implement the other events: <https://aws.amazon.com/premiumsupport/knowledge-center/cloudtrail-search-api-calls/>
+on it.
