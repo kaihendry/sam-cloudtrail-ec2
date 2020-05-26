@@ -24,7 +24,7 @@ exports.handler = async function (event, context) {
         message += `At ${log.eventTime}, event "${log.eventName}" on your EC2 instance ${machine.instanceId} on account ${log.recipientAccountId} in the Region ${log.awsRegion} with ${machine.tagSet && machine.tagSet.items && JSON.stringify(machine.tagSet.items)} tags.
 https://${log.awsRegion}.console.aws.amazon.com/ec2/v2/home?region=${log.awsRegion}#Instances:search=${machine.instanceId}`
       }
-      const params = { Message: message, TopicArn: process.env.NOTIFY_SNS }
+      const params = { Message: message, TopicArn: process.env.TOPICARN }
       console.log('Notifying', params)
       await new AWS.SNS().publish(params).promise()
       context.succeed()

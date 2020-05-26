@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Routes ec2 events from Cloudtrail logs groups to a lambda function for notification
 
 Parameters:
-    Topic:
+    TOPICARN:
         Type: String
         Description: Topic to publish cross region EC2 events to
 
@@ -15,9 +15,12 @@ Resources:
             Runtime: nodejs12.x
             Environment:
                 Variables:
-                    NOTIFY_SNS: !Ref Topic
+                    TOPICARN: !Ref TOPICARN
             Policies:
-                - AmazonSNSFullAccess
+                Statement:
+                    - Effect: Allow
+                      Action: sns:Publish
+                      Resource: !Ref TOPICARN
     LogRouterCloudWatchPermission:
         Type: AWS::Lambda::Permission
         Properties:
