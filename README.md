@@ -2,7 +2,7 @@
 
 Setup Cloudtrail to log to **CloudTrail/DefaultLogGroup**.
 
-<img src="https://s.natalian.org/2020-05-21/cloudtrail-cw-logs.png">
+<img src="https://s.natalian.org/2020-05-27/cloudtrail-with-cloudwatchlogs.png">
 
 Setup an SNS Topic with subscribers who would like to be informed when an EC2
 is launched in any AWS region.
@@ -20,7 +20,7 @@ Btw it takes **~15 minutes** for Cloudtrail to capture and log the event in [Clo
 # Why not use Cloudwatch events?
 
 <https://aws.amazon.com/premiumsupport/knowledge-center/ec2-email-instance-state-change/>
-is a good tip, but what they don't tell you, is that would need to deploy it in
+is a good tip, but what they don't tell you, is that you need to deploy in
 EVERY REGION for it to work.
 
 # Maintenance consideration

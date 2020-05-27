@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk')
 var zlib = require('zlib')
 // https://github.com/kaihendry/sam-cloudtrail-ec2
-exports.handler = async function (event) {
+exports.handler = async (event) => {
   console.log(JSON.stringify(event, null, 2))
   if (!event.awslogs || !event.awslogs.data) {
     console.error('invalid Cloudwatch logs event')
