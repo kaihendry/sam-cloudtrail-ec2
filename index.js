@@ -23,6 +23,7 @@ exports.handler = async (event) => {
         console.log('machine', machine)
         message += `At ${log.eventTime}, event "${log.eventName}" on your EC2 instance ${machine.instanceId} on account ${log.recipientAccountId} in the Region ${log.awsRegion}.\n`
         if (machine.tagSet && machine.tagSet.items) { message += `Tags: ${JSON.stringify(machine.tagSet.items)}\n` }
+        if (log.userIdentity && log.userIdentity.arn) { message += `Who: ${log.userIdentity.arn}\n` }
         message += `https://${log.awsRegion}.console.aws.amazon.com/ec2/v2/home?region=${log.awsRegion}#Instances:search=${machine.instanceId}\n`
       }
       const params = { Message: message, TopicArn: process.env.TOPICARN }
